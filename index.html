@@ -4,6 +4,30 @@
     <meta charset="UTF-8">
     <title>Plan de la Salle - Réservation des Places</title>
     <style>
+        <script type="module">
+  // Import the functions you need from the SDKs you need
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/11.9.0/firebase-app.js";
+  import { getAnalytics } from "https://www.gstatic.com/firebasejs/11.9.0/firebase-analytics.js";
+  // TODO: Add SDKs for Firebase products that you want to use
+  // https://firebase.google.com/docs/web/setup#available-libraries
+
+  // Your web app's Firebase configuration
+  // For Firebase JS SDK v7.20.0 and later, measurementId is optional
+  const firebaseConfig = {
+    apiKey: "AIzaSyBIB8OjNFpS4BMA4eeGng1xrX2cD8sK_lg",
+    authDomain: "plandesalle.firebaseapp.com",
+    databaseURL: "https://plandesalle-default-rtdb.firebaseio.com",
+    projectId: "plandesalle",
+    storageBucket: "plandesalle.firebasestorage.app",
+    messagingSenderId: "714688131384",
+    appId: "1:714688131384:web:02387ed0b46f3ba8e3d1cd",
+    measurementId: "G-3KDFNTDLCY"
+  };
+
+  // Initialize Firebase
+  const app = initializeApp(firebaseConfig);
+  const analytics = getAnalytics(app);
+</script>
         body { font-family: Trebuchet MS; text-align: center; background: #f8f9fa; padding: 20px; }
         .salle { display: flex; justify-content: center; gap: 50px; margin-bottom: 20px; }
         .zone { display: flex; flex-direction: column; align-items: center; }
