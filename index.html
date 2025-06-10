@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <title>Plan de Salle - Réservation</title>
+    <style>
+        body { font-family: Arial; text-align: center; background: #f8f9fa; padding: 20px; }
+        .salle { display: flex; justify-content: center; gap: 50px; margin-bottom: 20px; }
+        .zone { display: flex; flex-direction: column; align-items: center; }
+        .cote { display: grid; grid-template-columns: repeat(4, 50px); grid-gap: 5px; background: #fff; padding: 10px; border: 1px solid #ccc; border-radius: 8px; }
+        .siege { width: 50px; height: 50px; background: #ddd; border-radius: 4px; cursor: pointer; line-height: 50px; }
+        .siege.reserve { background: #f44336; color: white; cursor: not-allowed; }
+        .siege.selected { background: #4caf50; color: white; }
+        .scene { width: 100%; margin: 20px auto; background: #333; color: white; text-align: center; font-size: 18px; line-height: 50px; border-radius: 8px; }
+    </style>
+</head>
+<body>
+    <h1>Plan de Salle - Réservation</h1>
+    <div class="scene">Scène</div>
+
+    <div class="salle">
+        <div class="zone">
+            <h3>Gauche</h3>
+            <div class="cote" id="cote-gauche"></div>
+        </div>
+        <div class="zone">
+            <h3>Droite</h3>
+            <div class="cote" id="cote-droit"></div>
+        </div>
+    </div>
+
+    <button id="reserver" disabled>Réserver la place sélectionnée</button>
+
+    <script>
+        const gauche = document.getElementById('cote-gauche');
+        const droit = document.getElementById('cote-droit');
+        const reserverBtn = document.getElementById('reserver');
+        let selectedSeat = null;
+
+        let reservedSeats = JSON.parse(localStorage.getItem('reservedSeats')) || [];
+
+        function createSeats(container, side) {
+            container.innerHTML = '';
+            for (let i = 1; i <= 44; i++) {
+                const seat = document.createElement('div');
+                seat.classList.add('siege');
+                seat.dataset.side = side;
+                seat.dataset.number = i;
+                seat.textContent = i;
+
+                if (reservedSeats.includes(`${side}-${i}`)) {
+                    seat.classList.add('reserve');
+                    seat.textContent = 'X';
+                } else {
+                    seat.addEventListener('click', () => selectSeat(seat));
+                }
+
+                container.appendChild(seat);
+            }
+        }
+
+        function selectSeat(seat) {
+            if (seat.classList.contains('reserve')) return;
+            if (selectedSeat) selectedSeat.classList.remove('selected');
+            selectedSeat = seat;
+            seat.classList.add('selected');
+            reserverBtn.disabled = false;
+        }
+
+        reserverBtn.addEventListener('click', () => {
+            if (!selectedSeat) return;
+            const side = selectedSeat.dataset.side;
+            const number = selectedSeat.dataset.number;
+
+            reservedSeats.push(`${side}-${number}`);
+            localStorage.setItem('reservedSeats', JSON.stringify(reservedSeats));
+
+            selectedSeat.classList.remove('selected');
+            selectedSeat.classList.add('reserve');
+            selectedSeat.textContent = 'X';
+
+            selectedSeat.removeEventListener('click', () => selectSeat(selectedSeat));
+            selectedSeat = null;
+            reserverBtn.disabled = true;
+
+            alert('Les places choisies ont été validées avec le code EDMOND_AUTH1');
+        });
+
+        window.addEventListener('load', () => {
+            createSeats(gauche, 'Gauche');
+            createSeats(droit, 'Droite');
+        });
+    </script>
+</body>
+</html>
